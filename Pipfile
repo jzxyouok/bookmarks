@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.doubanio.com/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-crispy-forms = "*"
+django-debug-toolbar = "*"
+django-extensions = "*"
+werkzeug = "*"
+gunicorn = "*"
+"psycopg2" = "*"
+whitenoise = "*"
+django-heroku = "*"
+pillow = "*"
+requests = "*"
+sorl-thumbnail = "*"
+redis = "*"
+
+[dev-packages]
+ptpython = "*"
+"pdir2" = "*"
+yapf = "*"

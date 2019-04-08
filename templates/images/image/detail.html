@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load thumbnail %}
+
+{% block title %}{{image.title}}{% endblock title %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{image.title}}</h1>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        {% thumbnail image.image "300" as im %}
+        <a href="{{image.image.url}}">
+            <img src="{{im.url}}" alt="{{image.title}}">
+        </a>
+        {% endthumbnail %}
+    </div>
+    {% with favcount=image.favorited_by.count favorited_by=image.favorited_by.all %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">{{image.description}}</p>
+                <a href="#" class="favor btn {% if request.user in favorited_by %}btn-primary{% else %}btn-secondary{% endif %}" data-id="{{image.id}}" data-action="{% if request.user in favorited_by %}un{% endif %}favor">
+                    <i class="fa {% if request.user in favorited_by %}fa-heart{% else %}fa-heart-o{% endif %}" aria-hidden="true"></i>
+                </a>
+                <button class="btn btn-outline-secondary ml-4"><span class="total">{{favcount}}</span> Likes</button>
+                <button class="btn btn-outline-secondary ml-4"><span>{{total_views}}</span> Views</button>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+</div>
+{% endblock content %}
+
+{% block domready %}
+$('a.favor').click(e=>{
+    e.preventDefault()
+    let data = {
+        id: e.currentTarget.dataset.id,
+        action: e.currentTarget.dataset.action
+    }
+    $.post('{% url "images:favor" %}', data, data=>{
+        if(data.status === 'ok') {
+            let previousAction = e.currentTarget.dataset.action
+            $('a.favor').attr('data-action', (previousAction === 'favor') ? 'unfavor': 'favor')
+            $('a.favor').html((previousAction === 'favor') ? '<i class="fa fa-heart" aria-hidden="true"></i>': '<i class="fa fa-heart-o" aria-hidden="true"></i>')
+            $('a.favor').toggleClass('btn-secondary')
+            $('a.favor').toggleClass('btn-primary')
+            let previousLikes = parseInt($('.total').text())
+            $('.total').text((previousAction === 'favor' ? previousLikes + 1: previousLikes - 1))
+        }
+    })
+})
+{% endblock domready %}

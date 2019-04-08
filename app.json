@@ -1,0 +1,9 @@
+{
+    "name": "bookmarks",
+    "description": "A bookmark app built with django.",
+    "repository": "https://github.com/alphardex/bookmarks",
+    "keywords": [
+        "python",
+        "django"
+    ]
+}

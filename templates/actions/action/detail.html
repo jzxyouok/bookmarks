@@ -1,0 +1,26 @@
+{% load thumbnail %}
+
+{% with user=action.user %}
+<li class="list-group-item">
+{% if user.photo %}
+    {% thumbnail user.photo "80x80" crop="100%" as im %}
+        <a href="{{user.get_absolute_url}}">
+            <img src="{{im.url}}" class="img-fluid">
+        </a>
+    {% endthumbnail %}
+{% endif %}
+{% if action.target %}
+    {% with target=action.target %}
+        {% thumbnail target.image "80x80" crop="100%" as im %}
+            <a href="{{target.get_absolute_url}}">
+                <img src="{{im.url}}" class="img-fluid">
+            </a>
+        {% endthumbnail %}
+    {% endwith %}
+{% endif %}
+<span class="date float-right">{{action.created|timesince}} ago</span>
+<a href="{{user.get_absolute_url}}">{{user.username}}</a>
+{{action.verb}}
+<a href="{{action.target.get_absolute_url}}">{{action.target}}</a>
+</li>
+{% endwith %}

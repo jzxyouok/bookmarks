@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}{{user.username}}{% endblock title %}
+
+{% block content %}
+    <h1 class="page-header">{{user.username}}</h1>
+    {% thumbnail user.photo "180x180" crop="100%" as im%}
+        <img src="{{im.url}}">
+    {% endthumbnail %}
+    {% with total_followers=user.followers.count %}
+    <button class="btn btn-outline-secondary"><span class="follower_count">{{total_followers}}</span> follower{{total_followers|pluralize}}</button>
+    {% endwith %}
+    {% if request.user.username != user.username %}
+        <a class="btn btn-{% if not request.user in user.followers.all %}outline-{% endif %}success follow" href="#" data-id="{{user.id}}" data-action="{% if request.user in user.followers.all %}un{% endif %}follow">
+            {% if request.user not in user.followers.all %}Follow{% else %}Unfollow{% endif %}
+        </a>
+    {% endif %}
+    <div class="row mt-4">
+        {% include 'images/image/list_ajax.html' with images=user.uploaded_images.all %}
+    </div>
+{% endblock content %}
+
+{% block domready %}
+$('a.follow').click(e=>{
+    e.preventDefault()
+    let data = {
+        id: e.currentTarget.dataset.id,
+        action: e.currentTarget.dataset.action
+    }
+    $.post("{% url 'user_follow' %}", data, data=>{
+        if(data['status'] === 'ok') {
+            let previousAction = e.currentTarget.dataset.action
+            $('a.follow').attr('data-action', (previousAction === 'follow') ? 'unfollow':'follow')
+            $('a.follow').text(previousAction === 'follow' ? 'unfollow':'follow')
+            $('a.follow').toggleClass('btn-outline-success')
+            $('a.follow').toggleClass('btn-success')
+            let previousFollowers = parseInt($('span.follower_count').text())
+            $('span.follower_count').text(previousAction === 'follow' ? previousFollowers + 1:previousFollowers - 1)
+        }
+    })
+})
+{% endblock domready %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>Dashboard</h2>
+    </div>
+    <a href="{% url 'edit' user.pk %}" class="btn btn-primary">Edit Profile</a>
+    <p>
+    Drag the following button to your bookmarks toolbar to bookmark images from other websites → 
+    <a href="javascript:{% include "images/bookmarklet_launcher.js" %}" class="btn btn-success">Bookmark it</a>
+    </p>
+    <h2>Timeline</h2>
+    <div class="list-group timeline">
+        {% for action in actions %}
+            {% include 'actions/action/detail.html' %}
+        {% endfor %}
+    </div>
+{% endblock content %}

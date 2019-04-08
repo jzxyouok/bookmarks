@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-3">Bookmarks</h1>
+    <p class="lead">Bookmark the images you like.</p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Start</a>
+    </p>
+</div>
+{% endblock content %}

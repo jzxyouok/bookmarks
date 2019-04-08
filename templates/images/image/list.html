@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Images bookmarked{% endblock title %}
+
+{% block content %}
+    <h1 class="page-header">Images bookmarked <a href="{% url 'images:ranking' %}"><i class="fa fa-trophy" aria-hidden="true"></i></a></h1>
+    <div class="row" id="image-list">
+        {% include 'images/image/list_ajax.html' %}
+    </div>
+{% endblock content %}
+
+{% block domready %}
+    let page = 1
+    let emptyPage = false
+    let blockRequest = false
+
+    $(window).scroll(()=>{
+        // load the next page when the user is closer than 200 pixels to the bottom of the page
+        let margin = $(document).height() - $(window).height() - 200
+        if($(window).scrollTop() > margin && emptyPage == false && blockRequest == false) {
+            blockRequest = true
+            page += 1
+            $.get(`?page=${page}`, data=>{
+                if(data == ''){
+                    emptyPage = true
+                } else {
+                    blockRequest = false
+                    $('#image-list').append(data)
+                }
+            })
+        }
+    })
+{% endblock domready %}

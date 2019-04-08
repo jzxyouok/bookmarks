@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}People{% endblock title %}
+
+{% block content %}
+<h1 class="page-header">People</h1>
+{% for user in users %}
+<a href="{{user.get_absolute_url}}">
+{% thumbnail user.photo "180x180" crop="100%" as im%}
+<img src="{{im.url}}">
+{% endthumbnail %}
+</a>
+<a href="{{user.get_absolute_url}}">{{user.username}}</a>
+{% endfor %}
+{% endblock content %}

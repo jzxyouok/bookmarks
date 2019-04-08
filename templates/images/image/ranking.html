@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Images ranking{% endblock title %}
+
+{% block content %}
+<h1 class="page-header">Images ranking (by view)</h1>
+<ul class="list-group ranking">
+    {% for image in most_viewed_images %}
+        <li class="list-group-item list-group-item-action"><a href="{{image.get_absolute_url}}">{{image.title}}</a></li>
+    {% endfor %}
+</ul>
+{% endblock content %}
